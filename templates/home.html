@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-3">
+	</div>
+	<div class="col-md-6">
+		<form action="/show_friends" method="POST">
+			<input type="text" class="form-control" id="user_id" name="user_id">
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>
+	<div class="col-md-3">
+	</div>
+</div>
+{% endblock %}

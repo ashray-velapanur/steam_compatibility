@@ -1,0 +1,8 @@
+login
+get user's top tags
+	get recently played games
+	get all games
+	get tags for each games
+	figure out top tags
+get friends' top tags
+compute compatibility score

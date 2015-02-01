@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-3">
+	</div>
+	<div class="col-md-6">
+		<table class="table table-striped">
+		{% for friend in friends %}
+			<tr>
+				<td><img src="{{ friend.avatar }}"></td>
+				<td>{{ friend.personaname }}</td>
+				<td>{{ friend.steamid }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+	</div>
+	<div class="col-md-3">
+	</div>
+</div>
+{% endblock %}

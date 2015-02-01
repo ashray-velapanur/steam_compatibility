@@ -1,0 +1,15 @@
+application: neon-effect-786
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+builtins:
+- deferred: on
+
+handlers:
+- url: /user/.*
+  script: handlers.users.application
+
+- url: /.*
+  script: home.application
