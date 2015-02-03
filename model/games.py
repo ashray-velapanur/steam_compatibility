@@ -17,8 +17,12 @@ class Games(db.Model):
 
     @classmethod
     def get_or_update(cls, app_id):
-        game = Games.get_by_key_name(app_id)
+        game = Games.get_by_key_name(str(app_id))
+        logging.info('-'*80)
+        logging.info(app_id)
         if game:
+            logging.info('... in db')
             return game
         else:
+            logging.info('... updating')
             deferred.defer(game_data.get_tags, app_id, _queue="fetch-data")

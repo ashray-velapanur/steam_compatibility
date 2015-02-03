@@ -1,4 +1,3 @@
-from model.games import Games
 from google.appengine.api import urlfetch
 from google.appengine.ext import deferred
 
@@ -6,8 +5,7 @@ import json
 import logging
 import urllib
 
-from model.tags import Tags
-from model.games import Games
+import model
 
 KEY = "92856D25ABD7E4B62E28A981756A0E18"
 
@@ -15,28 +13,41 @@ KEY = "92856D25ABD7E4B62E28A981756A0E18"
 def get_recently_played_games(user_id):
     url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=%s&steamid=%s&format=json"%(KEY, user_id)
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    return response['response']['games']
+    return response['response']['games'] if response['response']['total_count'] != 0 else []
 
 def get_recent_tags(user_id):
     recently_played = get_recently_played_games(user_id)
     tags = []
     for game in recently_played:
         app_id = str(game['appid'])
-        game_object = Games.get_or_update(app_id)
+        game_object = model.games.Games.get_or_update(app_id)
         if game_object:
             tags.extend(game_object.tags)
-    return tags
+    return set(tags)
 
 def get_friends(user_id):
     friends = {}
-    url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%s&steamid=%s&relationship=friend"%(KEY, user_id)
-    response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    ids = [friend['steamid'] for friend in response['friendslist']['friends']] 
+    friends_url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%s&steamid=%s&relationship=friend"%(KEY, user_id)
+    friends_response = json.loads(urlfetch.fetch(friends_url, deadline=60).content)
+    ids = [friend['steamid'] for friend in friends_response['friendslist']['friends']] 
     ids = ids[0:10] ### remove this limit
     ids = ",".join(ids)
-    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s"%(KEY, ids)
-    response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    return response['response']['players']
+    profiles_url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s"%(KEY, ids)
+    profiles_response = json.loads(urlfetch.fetch(profiles_url, deadline=60).content)
+    return profiles_response['response']['players']
+
+def get_friends_recent_tags(user_id):
+    friends = get_friends(user_id)
+    friends_recent_tags = []
+    for friend in friends:
+        friends_recent_tags_dict = {}
+        friends_recent_tags_dict['name'] = friend['personaname']
+        friends_recent_tags_dict['avatar'] = friend['avatar']
+        friends_recent_tags_dict['recent_tags'] = get_recent_tags(friend['steamid'])
+        friends_recent_tags.append(friends_recent_tags_dict)
+    return friends_recent_tags
+
+
 
 
 def get_profiles(ids):

@@ -5,11 +5,11 @@
 	</div>
 	<div class="col-md-6">
 		<table class="table table-striped">
-		{% for friend in friends %}
+		{% for friend in friends_recent_tags %}
 			<tr>
 				<td><img src="{{ friend.avatar }}"></td>
-				<td>{{ friend.personaname }}</td>
-				<td>{{ friend.steamid }}</td>
+				<td>{{ friend.name }}</td>
+				<td>{{ friend.recent_tags }}</td>
 			</tr>
 		{% endfor %}
 		</table>

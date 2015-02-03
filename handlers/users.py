@@ -52,10 +52,11 @@ class UserFriendsHandler(webapp.RequestHandler):
     def get(self):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
-        friends = user.get_friends()
-        template_values = {'friends': friends}
-        path = os.path.join(os.path.dirname(__file__), 'templates/show_friends.html')
-        self.response.out.write(template.render(path, template_values))
+        if user:
+            friends_recent_tags = user_data.get_friends_recent_tags(user_id)
+            template_values = {'friends_recent_tags': friends_recent_tags}
+            path = 'templates/show_friends.html'
+            self.response.out.write(template.render(path, template_values))
 
 
 
