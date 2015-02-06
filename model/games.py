@@ -16,7 +16,7 @@ class Games(db.Model):
     tags = db.StringListProperty(indexed=False)
 
     @classmethod
-    def get_or_update(cls, app_id):
+    def get_or_update(cls, app_id, name):
         game = Games.get_by_key_name(str(app_id))
         logging.info('-'*80)
         logging.info(app_id)
@@ -25,4 +25,4 @@ class Games(db.Model):
             return game
         else:
             logging.info('... updating')
-            deferred.defer(game_data.get_tags, app_id, _queue="fetch-data")
+            deferred.defer(game_data.get_tags, app_id, name, _queue="fetch-data")

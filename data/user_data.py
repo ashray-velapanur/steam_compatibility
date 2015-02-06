@@ -17,13 +17,14 @@ def get_recently_played_games(user_id):
 
 def get_recent_tags(user_id):
     recently_played = get_recently_played_games(user_id)
-    tags = []
+    tags = set()
     for game in recently_played:
         app_id = str(game['appid'])
-        game_object = model.games.Games.get_or_update(app_id)
+        name = game['name']
+        game_object = model.games.Games.get_or_update(app_id, name)
         if game_object:
-            tags.extend(game_object.tags)
-    return set(tags)
+            tags |= set(game_object.tags)
+    return tags
 
 def get_friends(user_id):
     friends = {}
@@ -46,9 +47,6 @@ def get_friends_recent_tags(user_id):
         friends_recent_tags_dict['recent_tags'] = get_recent_tags(friend['steamid'])
         friends_recent_tags.append(friends_recent_tags_dict)
     return friends_recent_tags
-
-
-
 
 def get_profiles(ids):
     ids = ids[0:10] ### remove this limit
