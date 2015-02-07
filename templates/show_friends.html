@@ -9,7 +9,7 @@
 			<tr>
 				<td><img src="{{ friend.avatar }}"></td>
 				<td>{{ friend.name }}</td>
-				<td>{{ friend.recent_tags }}</td>
+				<td>{{ friend.recent_tags|join:", " }}</td>
 			</tr>
 		{% endfor %}
 		</table>
