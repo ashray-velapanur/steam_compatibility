@@ -4,9 +4,6 @@ from google.appengine.ext import deferred
 
 import logging
 
-from model.tags import Tags
-from data import game_data
-
 from bs4 import BeautifulSoup as bs
 
 KEY = "92856D25ABD7E4B62E28A981756A0E18"
@@ -14,15 +11,3 @@ KEY = "92856D25ABD7E4B62E28A981756A0E18"
 class Games(db.Model):
     name = db.StringProperty(indexed=False)
     tags = db.StringListProperty(indexed=False)
-
-    @classmethod
-    def get_or_update(cls, app_id, name):
-        game = Games.get_by_key_name(str(app_id))
-        logging.info('-'*80)
-        logging.info(app_id)
-        if game:
-            logging.info('... in db')
-            return game
-        else:
-            logging.info('... updating')
-            deferred.defer(game_data.get_tags, app_id, name, _queue="fetch-data")

@@ -4,11 +4,24 @@ from google.appengine.ext import deferred
 import json
 import logging
 import urllib
-import model
+
+from model.games import Games
 
 from bs4 import BeautifulSoup as bs
 
 KEY = "92856D25ABD7E4B62E28A981756A0E18"
+
+def update(app_id, name):
+    game = Games.get_by_key_name(str(app_id))
+    logging.info('-'*80)
+    logging.info(app_id)
+    if game:
+        logging.info('... in db')
+        return game
+    else:
+        logging.info('... updating')
+        deferred.defer(get_tags, app_id, name, _queue="fetch-data")
+
 
 def get_tags(app_id, name):
     url_tags = 'http://store.steampowered.com/app/%s'%(app_id)
@@ -21,5 +34,5 @@ def get_tags(app_id, name):
         for tag_element in tag_elements:
             tag = tag_element.string.strip()
             tags.append(tag)
-    model.games.Games(key_name=str(app_id), name=name, tags=tags).put()
+    Games(key_name=str(app_id), name=name, tags=tags).put()
 

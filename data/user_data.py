@@ -5,7 +5,7 @@ import json
 import logging
 import urllib
 
-import model
+from data import game_data
 
 KEY = "92856D25ABD7E4B62E28A981756A0E18"
 
@@ -21,10 +21,27 @@ def get_recent_tags(user_id):
     for game in recently_played:
         app_id = str(game['appid'])
         name = game['name']
-        game_object = model.games.Games.get_or_update(app_id, name)
+        game_object = game_data.update(app_id, name)
         if game_object:
             tags |= set(game_object.tags)
     return tags
+
+def get_weighted_recent_tags(user_id):
+    recently_played = get_recently_played_games(user_id)
+    weighted_tags = {}
+    for game in recently_played:
+        app_id = str(game['appid'])
+        name = game['name']
+        game_object = game_data.update(app_id, name)
+        logging.info('-'*80)
+        if game_object:
+            logging.info(game_object.tags)
+            for tag in game_object.tags:
+                if not tag in weighted_tags:
+                    weighted_tags[tag] = None
+                weighted_tags[tag] += 1
+    return weighted_tags
+
 
 def get_friends(user_id):
     friends = {}
