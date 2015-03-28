@@ -6,12 +6,13 @@ import logging
 import urllib
 
 from model.games import Games
+from model.tags import Tags
 
 from bs4 import BeautifulSoup as bs
 
 KEY = "92856D25ABD7E4B62E28A981756A0E18"
 
-def update(app_id, name):
+def get_or_update(app_id, name):
     game = Games.get_by_key_name(str(app_id))
     logging.info('-'*80)
     logging.info(app_id)
@@ -34,5 +35,5 @@ def get_tags(app_id, name):
         for tag_element in tag_elements:
             tag = tag_element.string.strip()
             tags.append(tag)
+            Tags(key_name=tag).put()
     Games(key_name=str(app_id), name=name, tags=tags).put()
-

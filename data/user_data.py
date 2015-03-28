@@ -21,7 +21,7 @@ def get_recent_tags(user_id):
     for game in recently_played:
         app_id = str(game['appid'])
         name = game['name']
-        game_object = game_data.update(app_id, name)
+        game_object = game_data.get_or_update(app_id, name)
         if game_object:
             tags |= set(game_object.tags)
     return tags
@@ -31,15 +31,14 @@ def get_weighted_recent_tags(user_id):
     weighted_tags = {}
     for game in recently_played:
         app_id = str(game['appid'])
-        name = game['name']
-        game_object = game_data.update(app_id, name)
-        logging.info('-'*80)
-        if game_object:
-            logging.info(game_object.tags)
-            for tag in game_object.tags:
-                if not tag in weighted_tags:
-                    weighted_tags[tag] = None
-                weighted_tags[tag] += 1
+        if 'name' in game:          ### some games don't have names?
+            name = game['name']
+            game_object = game_data.get_or_update(app_id, name)
+            if game_object:
+                for tag in game_object.tags:
+                    if not tag in weighted_tags:
+                        weighted_tags[tag] = 0
+                    weighted_tags[tag] += 1
     return weighted_tags
 
 
@@ -61,12 +60,13 @@ def get_friends_recent_tags(user_id):
         friends_recent_tags_dict = {}
         friends_recent_tags_dict['name'] = friend['personaname']
         friends_recent_tags_dict['avatar'] = friend['avatar']
-        friends_recent_tags_dict['recent_tags'] = get_recent_tags(friend['steamid'])
+        friends_recent_tags_dict['recent_tags'] = get_weighted_recent_tags(friend['steamid'])
+        #friends_recent_tags_dict['recent_tags'] = get_recent_tags(friend['steamid'])
         friends_recent_tags.append(friends_recent_tags_dict)
     return friends_recent_tags
 
 def get_profiles(ids):
-    ids = ids[0:10] ### remove this limit
+    ids = ids[0:10]         ### remove this limit
     ids = ",".join(ids)
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s"%(KEY, ids)
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
