@@ -5,15 +5,15 @@ import json
 import logging
 import urllib
 
-from model.games import Games
-from model.tags import Tags
+from model.game import Game
+from model.tag import Tag
 
 from bs4 import BeautifulSoup as bs
 
 KEY = "92856D25ABD7E4B62E28A981756A0E18"
 
 def get_or_update(app_id, name):
-    game = Games.get_by_key_name(str(app_id))
+    game = Game.get_by_key_name(str(app_id))
     logging.info('-'*80)
     logging.info(app_id)
     if game:
@@ -35,5 +35,5 @@ def get_tags(app_id, name):
         for tag_element in tag_elements:
             tag = tag_element.string.strip()
             tags.append(tag)
-            Tags(key_name=tag).put()
-    Games(key_name=str(app_id), name=name, tags=tags).put()
+            Tag(key_name=tag).put()
+    Game(key_name=str(app_id), name=name, tags=tags).put()

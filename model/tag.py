@@ -1,4 +1,4 @@
 from google.appengine.ext import db
 
-class Tags(db.Model):
+class Tag(db.Model):
 	pass

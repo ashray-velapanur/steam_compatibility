@@ -12,8 +12,8 @@ import os
 
 from bs4 import BeautifulSoup as bs
 
-from model.tags import Tags
-from model.games import Games
+from model.tag import Tag
+from model.game import Game
 from model.user import User
 
 from data import user_data
@@ -32,8 +32,8 @@ def fetch_game_data(game):
         tag_elements = glance_tags.findAll("a", {"class": "app_tag"})
         tags = [tag_element.string.strip() for tag_element in tag_elements]
     for tag in tags:
-        Tags(key_name=tag).put()
-    Games(key_name=str(app_id), name=name, tags=tags).put()
+        Tag(key_name=tag).put()
+    Game(key_name=str(app_id), name=name, tags=tags).put()
 
 class UserTagsHandler(webapp.RequestHandler):
     def get(self):
