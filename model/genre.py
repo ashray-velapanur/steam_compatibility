@@ -1,1 +1,1 @@
-primary_genres = ['Action', 'Action RPG', 'Adventure', 'Arena Shooter', 'CRPG', 'Casual', 'Driving', 'Dungeon Crawler', 'FPS', 'Hack and Slash', 'Horror', 'Indie', 'Isometric', 'MOBA', 'Management', 'Massively Multiplayer', 'Metroidvania', 'Platformer', 'Puzzle', 'RPG', 'RTS', 'Racing', 'Rogue-like', 'Simulation', 'Space Sim', 'Strategy', 'Survival', 'Tactical', 'Third-Person Shooter', 'Top-Down', 'Tower Defense', 'Turn-Based Strategy']
+genres = ['Action', 'Adventure', 'Casual', 'Indie', 'Massively Multiplayer', 'Racing', 'RPG', 'Simulation', 'Sports', 'Strategy']
