@@ -18,23 +18,6 @@ from model.user import User
 
 from data import user_data
 
-KEY = "92856D25ABD7E4B62E28A981756A0E18"
-
-def fetch_game_data(game):
-    app_id = game['appid']
-    name = game['name']
-    url = 'http://store.steampowered.com/app/%s'%(app_id)
-    response = urlfetch.fetch(url, deadline=60).content
-
-    tags = []
-    glance_tags = bs(response).find("div", {"class": "glance_tags"})
-    if glance_tags:
-        tag_elements = glance_tags.findAll("a", {"class": "app_tag"})
-        tags = [tag_element.string.strip() for tag_element in tag_elements]
-    for tag in tags:
-        Tag(key_name=tag).put()
-    Game(key_name=str(app_id), name=name, tags=tags).put()
-
 class UserTagsHandler(webapp.RequestHandler):
     def get(self):
         user_id = self.request.get('user_id')
@@ -57,10 +40,7 @@ class UserFriendsHandler(webapp.RequestHandler):
             template_values = {'friends_recent_tags': friends_recent_tags}
             path = 'templates/show_friends.html'
             self.response.out.write(template.render(path, template_values))
-
-
-
-        
+     
 application = webapp.WSGIApplication([  ('/user/tags', UserTagsHandler),
                                         ('/user/friends', UserFriendsHandler),
                                         ('/user/login', UserLoginHandler)], debug=True)

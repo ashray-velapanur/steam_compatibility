@@ -35,6 +35,8 @@ def get_weighted_recent_tags(user_id):
             name = game['name']
             game_object = game_data.get_or_update(app_id, name)
             if game_object:
+                logging.info('... play time')
+                logging.info(game)
                 for tag in game_object.tags:
                     if not tag in weighted_tags:
                         weighted_tags[tag] = 0
@@ -64,17 +66,3 @@ def get_friends_recent_tags(user_id):
         #friends_recent_tags_dict['recent_tags'] = get_recent_tags(friend['steamid'])
         friends_recent_tags.append(friends_recent_tags_dict)
     return friends_recent_tags
-
-def get_profiles(ids):
-    ids = ids[0:10]         ### remove this limit
-    ids = ",".join(ids)
-    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s"%(KEY, ids)
-    response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    return response['response']['players']
-
-def get_friends_ids(user_id):
-    friends = {}
-    url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%s&steamid=%s&relationship=friend"%(KEY, user_id)
-    response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    friend_ids = [friend['steamid'] for friend in response['friendslist']['friends']] 
-    return friend_ids
