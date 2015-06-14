@@ -19,7 +19,7 @@ from model.friend import Friend
 
 from data import user_data
 
-from factory import friend_factory
+from factory import friend_factory, game_factory
 
 class UserTagsHandler(webapp.RequestHandler):
     def get(self):
