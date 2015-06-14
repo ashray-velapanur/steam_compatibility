@@ -51,7 +51,7 @@ class GetFriendsHandler(webapp.RequestHandler):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
         friends_json = user_data.friends(user_id)
-        for friend in friends_json['friendslist']['friends']:
+        for friend in friends_json['friendslist']['friends'][0:5]:
             friend_factory.create(friend['steamid'], user)
 
 
