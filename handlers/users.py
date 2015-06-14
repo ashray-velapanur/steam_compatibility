@@ -19,6 +19,8 @@ from model.friend import Friend
 
 from data import user_data
 
+from factory import friend_factory
+
 class UserTagsHandler(webapp.RequestHandler):
     def get(self):
         user_id = self.request.get('user_id')
@@ -50,7 +52,7 @@ class GetFriendsHandler(webapp.RequestHandler):
         user = User.get_by_key_name(user_id)
         friends_json = user_data.friends(user_id)
         for friend in friends_json['friendslist']['friends']:
-            Friend.create(friend['steamid'], user)
+            friend_factory.create(friend['steamid'], user)
 
 
 
