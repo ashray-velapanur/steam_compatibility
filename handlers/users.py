@@ -46,7 +46,7 @@ class UserFriendsHandler(webapp.RequestHandler):
             #path = 'templates/show_friends.html'
             #self.response.out.write(template.render(path, template_values))
 
-class GetFriendsHandler(webapp.RequestHandler):
+class UserUpdateHandler(webapp.RequestHandler):
     def get(self):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
@@ -55,8 +55,25 @@ class GetFriendsHandler(webapp.RequestHandler):
             friend_factory.create(friend['steamid'], user)
 
 
+class UserGetHandler(webapp.RequestHandler):
+    def get(self):
+        user_id = self.request.get('user_id')
+        user = User.get_by_key_name(user_id)
+        template_values = {}
+        template_values['friends_recent_tags'] = []
+        for friend in Friend.all().ancestor(user):
+            tags = []
+            for game_id in friend.games:
+                game = Game.get_by_key_name(game_id)
+                tags.extend(game.tags)
+            tags = set(tags)
+            template_values['friends_recent_tags'].append({'name': friend.key().name(), 'recent_tags': tags})
+        path = 'templates/show_friends.html'
+        self.response.out.write(template.render(path, template_values))
+
 
 application = webapp.WSGIApplication([  ('/user/tags', UserTagsHandler),
                                         ('/user/friends/tmp', UserFriendsHandler),
                                         ('/user/login', UserLoginHandler),
-                                        ('/user/friends', GetFriendsHandler)], debug=True)
+                                        ('/user/update', UserUpdateHandler),
+                                        ('/user/get', UserGetHandler)], debug=True)
