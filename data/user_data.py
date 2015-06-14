@@ -9,11 +9,10 @@ from data import game_data
 
 KEY = "92856D25ABD7E4B62E28A981756A0E18"
 
-
-def get_recently_played_games(user_id):
-    url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=%s&steamid=%s&format=json"%(KEY, user_id)
+def friends(user_id):
+    url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%s&steamid=%s&relationship=friend"%(KEY, user_id)
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    return response['response']['games'] if response['response']['total_count'] != 0 else []
+    return response
 
 def get_recent_tags(user_id):
     recently_played = get_recently_played_games(user_id)
@@ -26,6 +25,16 @@ def get_recent_tags(user_id):
             tags |= set(game_object.tags)
     return tags
 
+def recently_played_games(user_id):
+    url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=%s&steamid=%s&format=json"%(KEY, user_id)
+    response = json.loads(urlfetch.fetch(url, deadline=60).content)
+    return response
+    #return response['response']['games'] if response['response']['total_count'] != 0 else []
+
+''''
+old code
+'''
+
 def get_weighted_recent_tags(user_id):
     recently_played = get_recently_played_games(user_id)
     weighted_tags = {}
@@ -37,7 +46,7 @@ def get_weighted_recent_tags(user_id):
             if game_object:
                 logging.info('... play time')
                 logging.info(game)
-                for tag in game_object.tags:
+                for tag in game_object.genres:
                     if not tag in weighted_tags:
                         weighted_tags[tag] = 0
                     weighted_tags[tag] += 1
@@ -54,6 +63,16 @@ def get_friends(user_id):
     profiles_url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s"%(KEY, ids)
     profiles_response = json.loads(urlfetch.fetch(profiles_url, deadline=60).content)
     return profiles_response['response']['players']
+
+def get_recent_player_tags(players):
+    recent_tags = []
+    for player in players:
+        recent_tags_dict = {}
+        recent_tags_dict['name'] = player['personaname']
+        recent_tags_dict['avatar'] = player['avatar']
+        recent_tags_dict['recent_tags'] = get_recent_tags(player['steamid'])
+        recent_tags.append(recent_tags_dict)
+    return recent_tags
 
 def get_friends_recent_tags(user_id):
     friends = get_friends(user_id)

@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup as bs
 from model.tag import Tag
 from model.game import Game
 from model.user import User
+from model.friend import Friend
 
 from data import user_data
 
@@ -36,11 +37,24 @@ class UserFriendsHandler(webapp.RequestHandler):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
         if user:
-            friends_recent_tags = user_data.get_friends_recent_tags(user_id)
-            template_values = {'friends_recent_tags': friends_recent_tags}
-            path = 'templates/show_friends.html'
-            self.response.out.write(template.render(path, template_values))
-     
+            self.response.write(user.friends)
+            #friends = user_data.get_friends(user_id)
+            #friends_recent_tags = user_data.get_recent_player_tags(friends)
+            #template_values = {'friends_recent_tags': friends_recent_tags}
+            #path = 'templates/show_friends.html'
+            #self.response.out.write(template.render(path, template_values))
+
+class GetFriendsHandler(webapp.RequestHandler):
+    def get(self):
+        user_id = self.request.get('user_id')
+        user = User.get_by_key_name(user_id)
+        friends_json = user_data.friends(user_id)
+        for friend in friends_json['friendslist']['friends']:
+            Friend.create(friend['steamid'], user)
+
+
+
 application = webapp.WSGIApplication([  ('/user/tags', UserTagsHandler),
-                                        ('/user/friends', UserFriendsHandler),
-                                        ('/user/login', UserLoginHandler)], debug=True)
+                                        ('/user/friends/tmp', UserFriendsHandler),
+                                        ('/user/login', UserLoginHandler),
+                                        ('/user/friends', GetFriendsHandler)], debug=True)
