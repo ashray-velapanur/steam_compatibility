@@ -26,7 +26,7 @@ class UserTagsHandler(webapp.RequestHandler):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
         if user:
-            tags = user_data.get_recent_tags(user_id)
+            tags = user_data.recent_tags(user_id)
             self.response.out.write(tags)
 
 class UserLoginHandler(webapp.RequestHandler):

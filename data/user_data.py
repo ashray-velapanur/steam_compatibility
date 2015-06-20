@@ -14,7 +14,7 @@ def friends(user_id):
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
     return response
 
-def get_recent_tags(user_id):
+def recent_tags(user_id):
     recently_played = get_recently_played_games(user_id)
     tags = set()
     for game in recently_played:
