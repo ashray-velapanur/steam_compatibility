@@ -11,6 +11,7 @@ from data import user_data_2 as user_data
 class User(db.Model):
     name = db.StringProperty(indexed=False)
     tags = db.StringListProperty(indexed=False)
+    games = db.StringListProperty(indexed=False)
 
     @property
     def id(self):
