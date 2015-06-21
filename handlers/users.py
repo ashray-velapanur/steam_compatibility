@@ -17,7 +17,7 @@ from model.game import Game
 from model.user import User
 from model.friend import Friend
 
-from data import user_data
+from data import user_data, score
 
 from factory import friend_factory, game_factory
 
@@ -62,11 +62,7 @@ class UserGetHandler(webapp.RequestHandler):
         template_values = {}
         template_values['friends_recent_tags'] = []
         for friend in Friend.all().ancestor(user):
-            tags = []
-            for game_id in friend.user.games:
-                game = Game.get_by_key_name(game_id)
-                tags.extend(game.tags)
-            tags = set(tags)
+            tags = score.for_user(friend.key().name())
             template_values['friends_recent_tags'].append({'name': friend.key().name(), 'recent_tags': tags})
         path = 'templates/show_friends.html'
         self.response.out.write(template.render(path, template_values))
