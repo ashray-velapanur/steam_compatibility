@@ -51,7 +51,7 @@ class UserUpdateHandler(webapp.RequestHandler):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
         friends_json = user_data.friends(user_id)
-        for friend in friends_json['friendslist']['friends'][0:5]:
+        for friend in friends_json['friendslist']['friends']:
             friend_factory.create(friend['steamid'], user)
 
 
@@ -63,7 +63,7 @@ class UserGetHandler(webapp.RequestHandler):
         template_values['friends_recent_tags'] = []
         for friend in Friend.all().ancestor(user):
             #tags = score.for_user(friend.key().name())
-            compatibility_score = score.compatibility(user_id, friend.key().name())
+            compatibility_score = score.compatibility(user, friend.user)
             template_values['friends_recent_tags'].append({'name': friend.key().name(), 'recent_tags': compatibility_score})
         path = 'templates/show_friends.html'
         self.response.out.write(template.render(path, template_values))
