@@ -10,17 +10,6 @@ from model.tag import Tag
 
 from bs4 import BeautifulSoup as bs
 
-def get_or_update(app_id, name):
-    game = Game.get_by_key_name(str(app_id))
-    logging.info('-'*80)
-    logging.info(app_id)
-    if game:
-        logging.info('... in db')
-        return game
-    else:
-        logging.info('... updating')
-        deferred.defer(get_tags, app_id, name, _queue="fetch-data")
-
 def get_tags(app_id, name):
     url_tags = 'http://store.steampowered.com/app/%s'%(app_id)
     response_tags = urlfetch.fetch(url_tags, deadline=60).content
