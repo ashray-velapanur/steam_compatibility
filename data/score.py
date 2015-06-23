@@ -15,3 +15,8 @@ def for_user(user_id):
 						scores[genre] = 0
 					scores[genre] +=1
 	return scores
+
+def compatibility(user_id_1, user_id_2):
+	user_1_tags = for_user(user_id_1)
+	user_2_tags = for_user(user_id_2)
+	return len(user_2_tags.viewkeys() & user_1_tags.viewkeys())
