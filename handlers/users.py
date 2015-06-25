@@ -32,7 +32,13 @@ class UserTagsHandler(webapp.RequestHandler):
 class UserLoginHandler(webapp.RequestHandler):
     def get(self):
         user_id = self.request.get('user_id')
-        User(key_name=user_id).put()
+        recently_played_games = user_data.recently_played_games(user_id)
+        logging.info(recently_played_games)
+        ids =[]
+        for game in recently_played_games:
+            ids.append(str(game['id']))
+            game_factory.create(game['id'], game['name'])
+        User.get_or_insert(key_name=user_id, games=ids)
 
 class UserFriendsHandler(webapp.RequestHandler):
     def get(self):
@@ -51,7 +57,7 @@ class UserUpdateHandler(webapp.RequestHandler):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
         friends_json = user_data.friends(user_id)
-        for friend in friends_json['friendslist']['friends']:
+        for friend in friends_json['friendslist']['friends'][0:10]:
             friend_factory.create(friend['steamid'], user)
 
 

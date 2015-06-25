@@ -17,5 +17,10 @@ def friends(user_id):
 def recently_played_games(user_id):
     url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=%s&steamid=%s&format=json"%(KEY, user_id)
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    return response
-    #return response['response']['games'] if response['response']['total_count'] != 0 else []
+    games = []
+    if 'total_count' in response['response'] and response['response']['total_count'] !=0:
+        for game in response['response']['games']:
+            id = game['appid']
+            name = game['name'] if 'name' in game else '???'
+            games.append({'name': name, 'id': id})
+    return games
