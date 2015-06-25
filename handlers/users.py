@@ -21,6 +21,8 @@ from data import user_data, score
 
 from factory import friend_factory, game_factory
 
+from google.appengine.ext import deferred
+
 class UserTagsHandler(webapp.RequestHandler):
     def get(self):
         user_id = self.request.get('user_id')
@@ -37,7 +39,7 @@ class UserLoginHandler(webapp.RequestHandler):
         ids =[]
         for game in recently_played_games:
             ids.append(str(game['id']))
-            game_factory.create(game['id'], game['name'])
+        deferred.defer(game_factory.create, recently_played_games)
         User.get_or_insert(key_name=user_id, games=ids)
 
 class UserFriendsHandler(webapp.RequestHandler):
