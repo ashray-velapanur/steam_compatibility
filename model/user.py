@@ -11,6 +11,7 @@ class User(db.Model):
     name = db.StringProperty(indexed=False)
     tags = db.StringListProperty(indexed=False)
     games = db.StringListProperty(indexed=False)
+    avatar = db.StringProperty(indexed=False)
 
     @property
     def id(self):
