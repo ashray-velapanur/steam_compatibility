@@ -13,10 +13,11 @@ def create(id):
     game = Game.get_by_key_name(str(id))
     if not game:
         details = game_data.details(id)
-        logging.info('#'*80)
-        logging.info(details)
+        game = Game(key_name=str(id), genres=[])
         if details:
-            Game(key_name=str(id), name=details['name'], genres=details['genres']).put()
+            game.name = details['name']
+            game.genres = details['genres']
+        game.put()
 
 #stop using this
 def _create(games):

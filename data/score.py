@@ -5,14 +5,12 @@ from model.genre import mapping
 def for_user(user):
 	scores = {}
 	for id in user.games:
-		tags = Game.get_by_key_name(id).tags
-		for tag in tags:
-			tag = tag.lower()
-			if tag in mapping:
-				for genre in mapping[tag]:
-					if not genre in scores:
-						scores[genre] = 0
-					scores[genre] +=1
+		genres = Game.get_by_key_name(id).genres
+		for genre in genres:
+			genre = genre.lower()
+			if not genre in scores:
+				scores[genre] = 0
+			scores[genre] +=1
 	return scores
 
 def compatibility(user_1, user_2):
