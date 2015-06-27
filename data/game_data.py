@@ -23,3 +23,11 @@ def get_tags(app_id, name):
             tags.append(tag)
             Tag(key_name=tag).put()
     Game(key_name=str(app_id), name=name, tags=tags).put()
+
+def details(id):
+    url = "http://store.steampowered.com/api/appdetails/?appids=%s"%(id)
+    response = json.loads(urlfetch.fetch(url, deadline=60).content)
+    if id in response and response[id]['success'] == True:
+        name = response[id]['data']['name']
+        genres = [genre['description'] for genre in response[id]['data']['genres']]
+        return {'name': name, 'genres': genres}
