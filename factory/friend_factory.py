@@ -8,9 +8,7 @@ from google.appengine.ext import deferred
 
 def create(user_id, user):
     recently_played_games = user_data.recently_played_games(user_id)
-    ids = []
-    for game in recently_played_games:
-        ids.append(str(game['id']))
-    deferred.defer(game_factory.create, recently_played_games)
-    friend_user = User.get_or_insert(key_name=user_id, games=ids)
+    for id in recently_played_games:
+        game_factory.create(id)
+    friend_user = User.get_or_insert(key_name=user_id, games=recently_played_games)
     Friend(key_name=user_id, parent=user, user=friend_user).put()
