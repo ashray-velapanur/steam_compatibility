@@ -35,11 +35,9 @@ class UserLoginHandler(webapp.RequestHandler):
     def get(self):
         user_id = self.request.get('user_id')
         recently_played_games = user_data.recently_played_games(user_id)
-        ids =[]
-        for game in recently_played_games:
-            game_factory.create(str(game['id']))
-            ids.append(str(game['id']))
-        User.get_or_insert(key_name=user_id, games=ids)
+        for id in recently_played_games:
+            game_factory.create(id)
+        User.get_or_insert(key_name=user_id, games=recently_played_games)
 
 class UserFriendsHandler(webapp.RequestHandler):
     def get(self):
