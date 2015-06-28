@@ -8,7 +8,7 @@ from google.appengine.ext import deferred
 
 def batch_create(ids, user):
     profiles = user_data.profiles(ids)
-    for profile in profiles['response']['players']:
+    for profile in profiles:
         id = profile['steamid']
         name = profile['personaname']
         avatar = profile['avatar']

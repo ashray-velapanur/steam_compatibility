@@ -28,5 +28,5 @@ def profiles(user_ids):
     logging.info(url)
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
     logging.info(response)
-    return response
+    return response['response']['players']
     
