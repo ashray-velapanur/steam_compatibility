@@ -7,9 +7,11 @@ from factory import game_factory
 from google.appengine.ext import deferred
 
 def batch_create(ids, user):
-    profiles = user_data.profiles(ids)
-    for profile in profiles:
-        deferred.defer(create, profile, user)
+    chunks = [ids[x : x + 25] for x in xrange(0, len(ids), 25)]
+    for chunk in chunks:
+        profiles = user_data.profiles(chunk)
+        for profile in profiles:
+            deferred.defer(create, profile, user)    
 
 def create(profile, user):
     id = profile['steamid']
