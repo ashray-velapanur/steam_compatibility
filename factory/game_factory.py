@@ -9,6 +9,10 @@ from model.game import Game
 
 from data import game_data
 
+def batch_create(ids):
+    for id in ids:
+        deferred.defer(create, id)
+
 def create(id):
     game = Game.get_by_key_name(str(id))
     if not game:
