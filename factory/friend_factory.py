@@ -13,6 +13,8 @@ def batch_create(ids, user):
         name = profile['personaname']
         avatar = profile['avatar']
         recently_played_games = user_data.recently_played_games(id)
+        for id in recently_played_games:
+            game_factory.create(id)
         friend_user = User.get_or_insert(key_name=id, games=recently_played_games, name=name, avatar=avatar)
         Friend(key_name=id, parent=user, user=friend_user).put()
 
