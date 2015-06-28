@@ -67,11 +67,11 @@ class UserGetHandler(webapp.RequestHandler):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
         template_values = {}
-        template_values['friends_recent_tags'] = []
+        template_values['friends'] = []
         for friend in Friend.all().ancestor(user):
             #tags = score.for_user(friend.key().name())
             compatibility_score = score.compatibility(user, friend.user)
-            template_values['friends_recent_tags'].append({'name': friend.key().name(), 'recent_tags': compatibility_score})
+            template_values['friends'].append({'name': friend.user.name, 'avatar': friend.user.avatar, 'recent_tags': compatibility_score})
         path = 'templates/show_friends.html'
         self.response.out.write(template.render(path, template_values))
 
