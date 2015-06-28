@@ -58,8 +58,7 @@ class UserUpdateHandler(webapp.RequestHandler):
         user_id = self.request.get('user_id')
         user = User.get_by_key_name(user_id)
         friends = user_data.friends(user_id)[0:5]
-        friend_factory.batch_create(friends, user)
-
+        deferred.defer(friend_factory.batch_create, friends, user)
 
 class UserGetHandler(webapp.RequestHandler):
     def get(self):
