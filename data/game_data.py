@@ -27,7 +27,7 @@ def get_tags(app_id, name):
 def details(id):
     url = "http://store.steampowered.com/api/appdetails/?appids=%s"%(id)
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
-    if id in response and response[id]['success'] == True:
+    if response and id in response and response[id]['success'] == True:
         name = response[id]['data']['name']
         genres = []
         if 'genres' in response[id]['data']:
