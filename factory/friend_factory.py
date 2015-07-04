@@ -6,6 +6,7 @@ from factory import game_factory
 
 from google.appengine.ext import deferred
 
+#this could be better written
 def batch_create(ids, user):
     chunks = [ids[x : x + 25] for x in xrange(0, len(ids), 25)]
     for chunk in chunks:
