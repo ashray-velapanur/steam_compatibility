@@ -29,5 +29,7 @@ def details(id):
     response = json.loads(urlfetch.fetch(url, deadline=60).content)
     if id in response and response[id]['success'] == True:
         name = response[id]['data']['name']
-        genres = [genre['description'] for genre in response[id]['data']['genres']]
+        genres = []
+        if 'genres' in response[id]['data']:
+            genres = [genre['description'] for genre in response[id]['data']['genres']]
         return {'name': name, 'genres': genres}
