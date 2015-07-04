@@ -29,10 +29,5 @@ def genre_scores(genres):
 		genre_scores[genre] +=1
 	return genre_scores
 
-def compatibility(user_1, user_2):
-	user_1_tags = for_user(user_1)
-	user_2_tags = for_user(user_2)
-	logging.info('$'*80)
-	logging.info(user_1_tags)
-	logging.info(user_2_tags)
-	return len(user_2_tags.viewkeys() & user_1_tags.viewkeys())
+def compatibility(genre_scores_1, genre_scores_2):
+	return float(len(genre_scores_1.viewkeys() & genre_scores_2.viewkeys()))
