@@ -11,17 +11,17 @@ from data import game_data
 
 def batch_create(ids):
     for id in ids:
-        deferred.defer(create, id)
+        game = Game.get_by_key_name(str(id))
+        if not game:
+            deferred.defer(create, id)
 
 def create(id):
-    game = Game.get_by_key_name(str(id))
-    if not game:
-        details = game_data.details(id)
-        game = Game(key_name=str(id), genres=[])
-        if details:
-            game.name = details['name']
-            game.genres = details['genres']
-        game.put()
+    details = game_data.details(id)
+    game = Game(key_name=str(id), genres=[])
+    if details:
+        game.name = details['name']
+        game.genres = details['genres']
+    game.put()
 
 #stop using this
 def _create(games):
