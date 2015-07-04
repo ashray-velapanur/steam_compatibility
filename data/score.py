@@ -9,7 +9,11 @@ def for_user(user):
 	for id in user.games:
 		logging.info('#'*80)
 		logging.info(id)
-		genres = Game.get_by_key_name(id).genres
+		game = Game.get_by_key_name(id)
+		if not game:
+			logging.info('no game')
+			continue
+		genres = game.genres
 		for genre in genres:
 			genre = genre.lower()
 			if not genre in scores:
