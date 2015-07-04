@@ -1,10 +1,12 @@
 from model.friend import Friend
 from model.user import User
 
-from data import user_data
+from data import user_data, score
 from factory import game_factory
 
 from google.appengine.ext import deferred
+
+import json
 
 #this could be better written
 def batch_create(ids, user):
@@ -19,6 +21,9 @@ def create(profile, user):
     name = profile['personaname']
     avatar = profile['avatar']
     recently_played_games = user_data.recently_played_games(id)
-    deferred.defer(game_factory.batch_create, recently_played_games)
-    friend_user = User.get_or_insert(key_name=id, games=recently_played_games, name=name, avatar=avatar)
+    genres = []
+    for id in recently_played_games:
+        genres.extend(game_factory.get_or_create(id).genres)
+    genre_scores = score.genre_scores(genres)
+    friend_user = User.get_or_insert(key_name=id, games=recently_played_games, name=name, avatar=avatar, genre_scores=json.dumps(genre_scores))
     Friend(key_name=id, parent=user, user=friend_user).put()

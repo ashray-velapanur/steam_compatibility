@@ -9,7 +9,7 @@ from config import STEAM_KEY
 
 class User(db.Model):
     name = db.StringProperty(indexed=False)
-    tags = db.StringListProperty(indexed=False)
+    genre_scores = db.StringProperty(indexed=False)
     games = db.StringListProperty(indexed=False)
     avatar = db.StringProperty(indexed=False)
 

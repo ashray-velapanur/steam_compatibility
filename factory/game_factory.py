@@ -23,6 +23,18 @@ def create(id):
         game.genres = details['genres']
     game.put()
 
+def get_or_create(id):
+    game = Game.get_by_key_name(str(id))
+    if game:
+        return game
+    details = game_data.details(id)
+    game = Game(key_name=str(id), genres=[])
+    if details:
+        game.name = details['name']
+        game.genres = details['genres']
+    game.put()
+    return game    
+
 #stop using this
 def _create(games):
     for game in games:

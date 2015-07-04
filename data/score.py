@@ -21,6 +21,14 @@ def for_user(user):
 			scores[genre] +=1
 	return scores
 
+def genre_scores(genres):
+	genre_scores = {}
+	for genre in genres:
+		if not genre in genre_scores:
+			genre_scores[genre] = 0
+		genre_scores[genre] +=1
+	return genre_scores
+
 def compatibility(user_1, user_2):
 	user_1_tags = for_user(user_1)
 	user_2_tags = for_user(user_2)

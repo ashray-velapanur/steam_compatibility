@@ -38,8 +38,11 @@ class UserLoginHandler(webapp.RequestHandler):
         profile = user_data.profiles([user_id])[0]
         avatar = profile['avatar']
         name = profile['personaname']
-        User.get_or_insert(key_name=user_id, games=recently_played_games, name=name, avatar=avatar)
-        deferred.defer(game_factory.batch_create, recently_played_games)
+        genres = []
+        for id in recently_played_games:
+            genres.extend(game_factory.get_or_create(id).genres)
+        genre_scores = score.genre_scores(genres)
+        User.get_or_insert(key_name=user_id, games=recently_played_games, name=name, avatar=avatar, genre_scores=json.dumps(genre_scores))
 
 class UserFriendsHandler(webapp.RequestHandler):
     def get(self):
