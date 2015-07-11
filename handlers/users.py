@@ -70,7 +70,7 @@ class UserGetHandler(webapp.RequestHandler):
         template_values = {}
         template_values['friends'] = []
         for friend in Friend.all().ancestor(user).order("-compatibility_score"):
-            template_values['friends'].append({'name': friend.user.name, 'avatar': friend.user.avatar, 'recent_tags': friend.compatibility_score})
+            template_values['friends'].append({'id': friend.user.key().name(), 'name': friend.user.name, 'avatar': friend.user.avatar, 'compatibility_score': friend.compatibility_score})
         path = 'templates/show_friends.html'
         self.response.out.write(template.render(path, template_values))
 

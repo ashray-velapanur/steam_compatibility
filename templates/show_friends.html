@@ -8,8 +8,8 @@
 		{% for friend in friends %}
 			<tr>
 				<td><img src="{{ friend.avatar }}"></td>
-				<td>{{ friend.name }}</td>
-				<td>{{ friend.recent_tags }}</td>
+				<td><a href="http://steamcommunity.com/profiles/{{ friend.id }}">{{ friend.name }}</a></td>
+				<td><progress value="{{ friend.compatibility_score }}" max="300"></progress></td>
 			</tr>
 		{% endfor %}
 		</table>
