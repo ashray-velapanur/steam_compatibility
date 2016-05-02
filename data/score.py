@@ -41,3 +41,24 @@ def compatibility(genre_scores_1, genre_scores_2):
             elif abs(score - user_2_buckets[genre]) == 2:
                 compatibility_score += BUCKET_SCORES[0]
     return compatibility_score 
+
+def score_percentages(genre_scores):
+    total = 0
+    percentages = {}
+    for genre, score in genre_scores.iteritems():
+        total += score
+    for genre, score in genre_scores.iteritems():
+        percentages[genre] = 100*score/total
+    return percentages
+
+def compatibility_percentages(user_genre_scores, friend_genre_scores):
+    user_percentages = score_percentages(user_genre_scores)
+    friend_percentages = score_percentages(friend_genre_scores)
+    common_genres = []
+    compatibility_score = 0.0
+    for genre in user_percentages.viewkeys() & friend_percentages.viewkeys():
+        common_genres.append(genre)
+    if len(common_genres) > 0:
+        for genre in common_genres:
+            compatibility_score += (100 - abs(user_percentages[genre] - friend_percentages[genre]))
+    return compatibility_score
