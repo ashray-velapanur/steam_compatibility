@@ -7,7 +7,7 @@ import urllib
 
 from data import game_data
 
-KEY = "92856D25ABD7E4B62E28A981756A0E18"
+KEY = "8382D97126A89CC6C97905F54649A522"
 
 def friends(user_id):
     url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%s&steamid=%s&relationship=friend"%(KEY, user_id)

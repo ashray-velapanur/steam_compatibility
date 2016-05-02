@@ -10,6 +10,7 @@
 				<td><img src="{{ friend.avatar }}"></td>
 				<td><a href="http://steamcommunity.com/profiles/{{ friend.id }}">{{ friend.name }}</a></td>
 				<td><progress value="{{ friend.compatibility_score }}" max="300"></progress></td>
+				<td>{{ friend.genre_scores }}</td>
 			</tr>
 		{% endfor %}
 		</table>
