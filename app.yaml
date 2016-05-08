@@ -10,3 +10,6 @@ builtins:
 handlers:
 - url: /user/.*
   script: handlers.users.application
+
+- url: /.*
+  script: handlers.users.application

@@ -43,12 +43,12 @@ def compatibility(genre_scores_1, genre_scores_2):
     return compatibility_score 
 
 def score_percentages(genre_scores):
-    total = 0
+    total = 0.0
     percentages = {}
     for genre, score in genre_scores.iteritems():
-        total += score
+        total += float(score)
     for genre, score in genre_scores.iteritems():
-        percentages[genre] = 100*score/total
+        percentages[genre] = 100.0*score/total
     return percentages
 
 def compatibility_percentages(user_genre_scores, friend_genre_scores):
@@ -60,5 +60,6 @@ def compatibility_percentages(user_genre_scores, friend_genre_scores):
         common_genres.append(genre)
     if len(common_genres) > 0:
         for genre in common_genres:
-            compatibility_score += (100 - abs(user_percentages[genre] - friend_percentages[genre]))
+            compatibility_score += (100.0 - abs(user_percentages[genre] - friend_percentages[genre]))
+        compatibility_score = compatibility_score/len(common_genres)            
     return compatibility_score

@@ -33,6 +33,11 @@ class UserTagsHandler(webapp.RequestHandler):
 
 class UserLoginHandler(webapp.RequestHandler):
     def get(self):
+        template_values = {}
+        path = 'templates/login.html'
+        self.response.out.write(template.render(path, template_values))
+
+    def post(self):
         user_id = self.request.get('user_id')
         recently_played_games = user_data.recently_played_games(user_id)
         profile = user_data.profiles([user_id])[0]
@@ -42,7 +47,9 @@ class UserLoginHandler(webapp.RequestHandler):
         for id in recently_played_games:
             genres.extend(game_factory.get_or_create(id).genres)
         genre_scores = score.genre_scores(genres)
-        User.get_or_insert(key_name=user_id, games=recently_played_games, name=name, avatar=avatar, genre_scores=json.dumps(genre_scores))
+        user = User.get_or_insert(key_name=user_id, games=recently_played_games, name=name, avatar=avatar, genre_scores=json.dumps(genre_scores))
+        friends = user_data.friends(user_id)
+        deferred.defer(friend_factory.batch_create, friends, user)
 
 class UserFriendsHandler(webapp.RequestHandler):
     def get(self):
